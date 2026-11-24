@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediaTranscode — Video Workspace</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+  <div class="site-loader" id="site-loader" role="dialog" aria-label="Enter MediaTranscode">
+    <div class="loader-brand"><span class="loader-mark">M</span> MEDIATRANSCODE</div>
+    <div class="loader-bar"><i id="loader-bar"></i></div>
+    <p class="loader-caption" id="loader-caption">Loading scene… 0%</p>
+    <div class="loader-actions">
+      <button class="primary" id="enter-sound" type="button">Enter with sound</button>
+      <button class="ghost" id="enter-quiet" type="button">Enter without sound</button>
+    </div>
+  </div>
+
+  <section class="immersive-intro" id="immersive-intro">
+    <div class="scene-sticky">
+      <nav class="hero-nav" aria-label="Main">
+        <a class="brand" href="#" data-key><span class="brand-mark">M</span><span>media<span class="brand-light">transcode</span></span></a>
+        <a class="link" href="#app" data-key data-hero-go="library">Library</a>
+        <a class="link" href="#app" data-key data-hero-go="upload">Upload</a>
+        <a class="link" href="#app" data-key data-hero-go="queue">Queue</a>
+      </nav>
+      <canvas id="rock-scene" aria-label="A cinematic 3D-inspired room with a rocky landscape"></canvas>
+      <div class="scene-vignette"></div>
+      <div class="scene-copy" id="scene-copy">
+        <span class="scene-kicker" data-key>THE MEDIA WORKSPACE</span>
+        <h1 data-key>Every frame.<br><em>In its element.</em></h1>
+        <p data-key>Bring your footage in. Shape the quality. Let every conversion find its flow.</p>
+        <span class="scroll-cue" data-key><i></i> KEEP SCROLLING</span>
+      </div>
+      <article class="scene-chapter chapter-one"><span class="chapter-number">01 / IMPORT</span><h2>Bring every frame in.</h2><p>Drop in your original clip and keep your source file safe.</p></article>
+      <article class="scene-chapter chapter-two"><span class="chapter-number">02 / TRANSFORM</span><h2>Shape the output.</h2><p>Choose 1080p, 720p or 480p and let FFmpeg handle the work.</p></article>
+      <article class="scene-chapter chapter-three"><span class="chapter-number">03 / EXPORT</span><h2>Ready for every screen.</h2><p>Track the job, then download your converted MP4.</p></article>
+    </div>
+  </section>
+
+  <div class="app-shell" id="app">
+    <aside class="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">M</span><span>media<span class="brand-light">transcode</span></span></a>
+      <p class="side-label">WORKSPACE</p>
+      <button class="nav-item active" data-page="library"><span>▦</span> Video Library</button>
+      <button class="nav-item" data-page="upload"><span>＋</span> Upload Clip</button>
+      <button class="nav-item" data-page="queue"><span>◷</span> Queue Tracker <span class="nav-count" id="queue-count">0</span></button>
+      <p class="side-label second-label">PREFERENCES</p>
+      <button class="nav-item" data-page="presets"><span>◈</span> Preset Profiles</button>
+      <button class="nav-item" data-page="settings"><span>⚙</span> Settings</button>
+      <div class="sidebar-bottom"><div class="avatar">MT</div><div><b>My Workspace</b><small>Personal plan</small></div><span class="dots">•••</span></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><span class="eyebrow">YOUR CREATIVE WORKSPACE</span><h1 id="page-title">Video Library</h1></div>
+        <div class="top-actions"><span class="online-dot"></span><span class="online-text">System ready</span><button class="primary small" data-go="upload">＋ New upload</button></div>
+      </header>
+
+      <section class="page active-page" id="library-page">
+        <div class="welcome-row"><div><h2>Your media, in one place.</h2><p>Manage your clips and keep every conversion moving.</p></div><div class="storage-pill">500 MB <span>MAX FILE SIZE</span></div></div>
+        <div class="toolbar"><input id="search" type="search" placeholder="⌕  Search your videos..."><select id="status-filter"><option value="All">All statuses</option><option>Queued</option><option>Processing</option><option>Done</option><option>Failed</option></select></div>
+        <div class="section-heading"><div><h3>Recent clips</h3><p>Your uploaded and converted videos</p></div><span class="muted" id="clip-total">0 CLIPS</span></div>
+        <div class="video-grid" id="video-grid"><div class="empty-state"><div class="empty-icon">▧</div><h3>Your library is waiting</h3><p>Upload a video to start your first conversion.</p><button class="primary" data-go="upload">Upload a clip <span>→</span></button></div></div>
+      </section>
+
+      <section class="page" id="upload-page">
+        <div class="page-intro"><span class="eyebrow">ADD TO YOUR WORKSPACE</span><h2>Upload a new clip</h2><p>Choose a video and select the output quality you need.</p></div>
+        <form id="upload-form">
+          <label class="drop-zone" id="drop-zone">
+            <input type="file" id="video-file" accept=".mp4,.mov,.mkv,video/mp4,video/quicktime,video/x-matroska" hidden>
+            <span class="upload-symbol">↑</span><strong>Drop your video here</strong><span class="muted">or <u>browse files</u> from your computer</span><small>MP4, MOV or MKV · Up to 500 MB</small>
+            <span class="file-picked" id="file-picked"></span>
+          </label>
+          <div class="form-card"><label for="preset">OUTPUT PRESET</label><select id="preset"><option value="1080p">1080p · Full HD</option><option value="720p" selected>720p · HD</option><option value="480p">480p · Standard</option></select><div class="form-note">Your video will be converted to MP4 format.</div></div>
+          <div class="form-footer"><span class="muted">Your original file stays unchanged.</span><button class="primary" id="upload-button" type="submit">Start conversion <span>→</span></button></div>
+          <p class="form-message" id="form-message"></p>
+        </form>
+      </section>
+
+      <section class="page" id="queue-page">
+        <div class="page-intro"><span class="eyebrow">CONVERSION ACTIVITY</span><h2>Queue tracker</h2><p>Follow the progress of your video conversions.</p></div>
+        <div id="queue-list" class="queue-list"><div class="empty-state compact"><div class="empty-icon">◷</div><h3>No active conversions</h3><p>When you upload a clip, its progress will appear here.</p><button class="primary" data-go="upload">Upload a clip</button></div></div>
+      </section>
+
+      <section class="page" id="presets-page">
+        <div class="page-intro"><span class="eyebrow">OUTPUT SETTINGS</span><h2>Preset profiles</h2><p>Choose the balance of quality and file size that works for you.</p></div>
+        <div class="preset-grid"><article class="preset-card"><span class="preset-icon">✦</span><h3>1080p</h3><p>Full HD · Best detail</p><span class="tag">HIGH QUALITY</span></article><article class="preset-card featured"><span class="preset-icon">◈</span><h3>720p</h3><p>HD · Balanced output</p><span class="tag">RECOMMENDED</span></article><article class="preset-card"><span class="preset-icon">◌</span><h3>480p</h3><p>Standard · Smaller file</p><span class="tag">SMALLER SIZE</span></article></div>
+      </section>
+
+      <section class="page" id="settings-page">
+        <div class="page-intro"><span class="eyebrow">WORKSPACE</span><h2>Settings</h2><p>A few details about your local MediaTranscode setup.</p></div>
+        <div class="form-card settings-card"><div><b>Workspace name</b><p class="muted">My Workspace</p></div><div><b>Maximum upload size</b><p class="muted">500 MB per video</p></div><div><b>Supported formats</b><p class="muted">MP4, MOV, MKV → MP4</p></div><div><b>Conversion engine</b><p class="muted">FFmpeg running locally on your computer</p></div></div>
+      </section>
+      <footer>MEDIATRANSCODE <span>·</span> MADE FOR YOUR MEDIA WORKFLOW</footer>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true">♪ Sound on</button>
+  <script src="/assets/script.js"></script>
+</body>
+</html>
