@@ -125,7 +125,7 @@ async function pollJobs() {
 pollJobs();
 
 
-// Sound: each element that appears plays one soft synthesized note (no audio files).
+
 const Sound = (() => {
   let ctx, out, step = 0, on = true;
   try { on = localStorage.getItem('mt-sound') !== 'off'; } catch (e) {}
@@ -177,8 +177,6 @@ const Sound = (() => {
   $('enter-sound').focus();
 })();
 
-// A perspective room and rocky terrain drawn on canvas. Scroll progress moves the camera
-// through the environment and changes the terrain lighting, depth and chapter overlays.
 (function initScrollScene(){
   const canvas = document.getElementById('rock-scene');
   const section = document.getElementById('immersive-intro');
@@ -193,7 +191,7 @@ const Sound = (() => {
     r: .35 + ((i * 13.7) % 100) / 100,
     tone: (i * 17) % 42
   }));
-  // 180-frame sequence: scroll position picks the frame, eased so it plays smoothly.
+
   const seq = {ready: false, cur: 0, imgs: [], loaded: 0, count: 180}; let chain = 0;
   const bar = document.getElementById('loader-bar'), cap = document.getElementById('loader-caption');
   const url = n => `/assets/frames/frame_${String(n).padStart(4, '0')}.webp`;
@@ -232,24 +230,24 @@ const Sound = (() => {
     }
     const p=progress, horizon=h*(.49-.10*p), drift=Math.sin(p*Math.PI*2)*w*.035, zoom=1+p*.58;
     const sky=ctx.createLinearGradient(0,0,0,horizon);sky.addColorStop(0,'#f2f0ed');sky.addColorStop(1,'#c9c8c5');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
-    // Architectural white room with strong perspective lines.
+  
     polygon([[0,0],[w,0],[w*.79,horizon],[w*.21,horizon]],'#efeeeb');
     polygon([[0,0],[w*.21,horizon],[w*.21,h],[0,h]],'#d7d6d3');
     polygon([[w,0],[w*.79,horizon],[w*.79,h],[w,h]],'#c9c8c5');
     polygon([[0,0],[w,horizon*.02],[w*.21,horizon],[0,horizon*.8]],'#f7f6f3');
     polygon([[w,0],[w,horizon*.8],[w*.79,horizon],[w*.98,0]],'#e7e6e3');
-    // Back wall doorway changes scale and position as the camera advances.
+ 
     const doorW=w*(.075+.035*p), doorH=h*(.29+.12*p), doorX=w*(.5-.0375-.08*p)+drift*.25;
     ctx.fillStyle='#252a32';ctx.fillRect(doorX,horizon-doorH,doorW,doorH);
     ctx.fillStyle='#ffffff25';ctx.fillRect(doorX+doorW*.12,horizon-doorH,doorW*.08,doorH);
-    // Floor plane.
+   
     polygon([[0,horizon*.8],[w,horizon*.8],[w,h],[0,h]],'#45464a');
     const floorGrad=ctx.createLinearGradient(0,horizon,0,h);floorGrad.addColorStop(0,'#77777a');floorGrad.addColorStop(.32,'#3c3d41');floorGrad.addColorStop(1,'#101216');ctx.fillStyle=floorGrad;ctx.fillRect(0,horizon,w,h-horizon);
-    // Perspective floor seams shift with scroll to make camera movement obvious.
+  
     ctx.strokeStyle='#d8d5ce22';ctx.lineWidth=1;
     for(let i=0;i<12;i++){let x=w*i/11;ctx.beginPath();ctx.moveTo(w/2+(x-w/2)*.08,horizon);ctx.lineTo(x+drift,h);ctx.stroke();}
     for(let i=1;i<8;i++){let y=horizon+(h-horizon)*Math.pow(i/8,1.7);ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
-    // Procedural jagged stones in perspective; the camera moves through them as scroll progresses.
+ 
     rocks.forEach((rock,i)=>{
       let z=(rock.z + p*.72)%1, perspective=.12+z*z*1.15;
       let x=(rock.x-.5)*w*perspective*1.75+w/2+drift*(.2+z);
@@ -262,7 +260,7 @@ const Sound = (() => {
       polygon(points,color);
       ctx.strokeStyle=`rgba(225,225,220,${.05+z*.08})`;ctx.lineWidth=Math.max(.4,size*.035);ctx.beginPath();ctx.moveTo(x-size*.55,y-size*.55);ctx.lineTo(x-size*.08,y-size*.9);ctx.lineTo(x+size*.55,y-size*.48);ctx.stroke();
     });
-    // Moving cinematic light sweep across the terrain.
+    
     const lx=w*(.2+.65*p), ly=h*(.68-.12*Math.sin(p*Math.PI));const glow=ctx.createRadialGradient(lx,ly,1,lx,ly,w*.22);glow.addColorStop(0,'rgba(255,239,205,.22)');glow.addColorStop(1,'rgba(255,239,205,0)');ctx.fillStyle=glow;ctx.fillRect(0,horizon,w,h-horizon);
   }
   function update(){
@@ -275,7 +273,7 @@ const Sound = (() => {
   window.addEventListener('resize',resize,{passive:true});window.addEventListener('scroll',update,{passive:true});resize();update();
 })();
 
-// Page content presses in as it enters the viewport, one note per element.
+
 (function initContentReveals(){
   const targets = document.querySelectorAll('.sidebar .brand, .sidebar .nav-item, .main .topbar, .main .welcome-row, .main .toolbar, .main .section-heading, .main .video-grid, .main .page-intro, .main #upload-form, .main .queue-list, .main .preset-grid, .main .settings-card, .main footer');
   targets.forEach((element) => element.classList.add('reveal-on-scroll'));
@@ -292,7 +290,7 @@ const Sound = (() => {
   targets.forEach((element) => observer.observe(element));
 })();
 
-// 3D: mouse parallax on the hero scene, and tilt on cards.
+
 (function init3D(){
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.matchMedia('(hover: hover)').matches) return;
   const stage = document.querySelector('.scene-sticky');
