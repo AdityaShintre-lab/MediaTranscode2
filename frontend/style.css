@@ -4,16 +4,16 @@
 @media(max-width:850px){.sidebar{width:205px}.main{padding:27px 3%}.video-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.app-shell{display:block}.sidebar{width:100%;padding:13px;display:block;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:0 5px 13px}.side-label,.sidebar-bottom,.second-label{display:none}.sidebar .nav-item{display:inline-flex;width:auto;padding:9px;font-size:10px;gap:6px}.nav-item span:first-child{font-size:14px;width:auto}.nav-count{display:none}.main{padding:22px 16px}.topbar{align-items:flex-start}.topbar h1{font-size:20px}.online-text{display:none}.primary.small{margin:0}.welcome-row{margin:25px 0 20px}.welcome-row h2{font-size:18px}.storage-pill{font-size:10px}.toolbar select{width:125px}.video-grid,.preset-grid{grid-template-columns:1fr}.queue-card{align-items:flex-start}.queue-right{min-width:65px}.settings-card{grid-template-columns:1fr}.form-footer{gap:12px;align-items:flex-start;flex-direction:column}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 
 
-/* Scroll-led environment: background camera and story copy respond to scroll position. */
+
 .immersive-intro{height:390vh;position:relative;background:#090a0b}.scene-sticky{height:100vh;min-height:580px;position:sticky;top:0;overflow:hidden;background:#deddd9}.scene-sticky canvas{position:absolute;inset:0;width:100%;height:100%;display:block}.scene-vignette{position:absolute;inset:0;background:linear-gradient(90deg,#11192318,transparent 55%),linear-gradient(0deg,#07090bc0,transparent 48%),radial-gradient(ellipse at center,transparent 28%,#0005 100%);pointer-events:none}.scene-copy{position:absolute;z-index:2;top:42%;left:50%;width:min(720px,88vw);transform:translate(-50%,-50%);text-align:center;color:#222630;text-shadow:0 1px 16px #fff9;transition:opacity .25s,transform .25s}.scene-kicker{font-size:10px;letter-spacing:3px;font-weight:700}.scene-copy h1{font:500 clamp(38px,6.2vw,82px)/.98 Manrope,sans-serif;letter-spacing:-4px;margin:18px 0 13px}.scene-copy h1 em{font-style:normal;font-weight:800}.scene-copy p{font-size:clamp(12px,1.4vw,16px);line-height:1.6;max-width:510px;margin:0 auto;color:#30333b}.scroll-cue{display:inline-flex;align-items:center;gap:10px;margin-top:42px;font-size:9px;letter-spacing:2px;font-weight:700}.scroll-cue i{width:7px;height:7px;border-radius:50%;background:#d19e55;box-shadow:0 0 0 5px #d19e552b;animation:cue-pulse 1.6s infinite}@keyframes cue-pulse{50%{box-shadow:0 0 0 10px #d19e5500}}
 .scene-chapter{position:absolute;z-index:3;left:9vw;bottom:13%;width:min(430px,80vw);color:#fff;opacity:0;transform:translate3d(0,32px,0) scale(.97);transition:opacity .55s ease,transform .7s cubic-bezier(.2,.75,.2,1);text-shadow:0 2px 18px #0008;pointer-events:none}.scene-chapter.visible{opacity:1;transform:translate3d(0,0,0) scale(1)}.chapter-number{font:700 10px Manrope;letter-spacing:2.4px;color:#e8c58d}.scene-chapter h2{font:600 clamp(30px,4.2vw,54px)/1.05 Manrope;margin:12px 0}.scene-chapter p{font:400 14px/1.6 'DM Sans';max-width:390px;color:#f2f0eb;margin:0}.chapter-two{left:auto;right:9vw;text-align:right}.chapter-two p{margin-left:auto}.chapter-three{left:50%;transform:translate3d(-50%,32px,0) scale(.97);text-align:center}.chapter-three.visible{transform:translate3d(-50%,0,0) scale(1)}.app-shell{position:relative;z-index:5}.main{background:var(--bg)}
-/* Content reveals only when its section enters the viewport. */
+
 
 @media(max-width:620px){.immersive-intro{height:330vh}.scene-sticky{min-height:520px}.scene-copy{top:38%}.scene-copy h1{letter-spacing:-2px}.scene-copy p{max-width:310px}.scene-chapter{left:7vw;right:7vw;bottom:10%;width:auto;text-align:left}.chapter-two{left:7vw;right:7vw;text-align:left}.chapter-two p{margin-left:0}.chapter-three{left:7vw;transform:translate3d(0,32px,0) scale(.97);text-align:left}.chapter-three.visible{transform:translate3d(0,0,0) scale(1)}.scene-chapter h2{font-size:32px}.scene-chapter p{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.key,.scroll-cue i,.reveal-on-scroll{animation:none!important;transition:none!important;opacity:1;transform:none}}
 
 
-/* ---------- Site loads like key presses: every block drops in and plays a note ---------- */
+
 .site-loader{position:fixed;inset:0;z-index:1000;background:radial-gradient(ellipse at 50% 45%,#242620 0,#10110f 62%,#070807 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .6s ease,visibility .6s ease}
 .site-loader.is-gone{opacity:0;visibility:hidden;pointer-events:none}
 .loader-brand{font:700 11px Manrope,sans-serif;letter-spacing:3px;color:#e8e4d9;display:flex;align-items:center;gap:10px;margin-bottom:10px}
@@ -27,7 +27,7 @@
 [data-key]{opacity:0}[data-key].keyed{opacity:1;animation:keypress .62s cubic-bezier(.2,.8,.25,1) backwards}
 .reveal-on-scroll{opacity:0}.reveal-on-scroll.is-revealed{opacity:1;animation:keypress .62s cubic-bezier(.2,.8,.25,1) backwards}
 .key{}
-/* Hero: dark 3D frame scene with parallax */
+
 .scene-sticky{--mx:0;--my:0;background:#0e0f0d}
 .scene-sticky canvas{transform:perspective(1100px) rotateY(calc(var(--mx)*2.2deg)) rotateX(calc(var(--my)*-1.8deg)) scale(1.07);transition:transform .35s ease-out;will-change:transform}
 .scene-copy{color:#f3efe6;text-shadow:0 2px 24px #000b}.scene-copy p{color:#d9d6cc}.scene-kicker{color:var(--gold2)}
@@ -36,7 +36,7 @@
 .hero-nav{position:absolute;z-index:4;top:0;left:0;right:0;display:flex;align-items:center;gap:28px;padding:26px 5vw;color:#f1f0e9}
 .hero-nav .brand{margin:0 auto 0 0}.hero-nav .link{color:#cfcdc2;text-decoration:none;font:500 13px 'DM Sans',sans-serif;transition:color .2s}.hero-nav .link:hover{color:var(--gold2)}
 .sound-toggle{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:50;background:#20231ecc;border:1px solid var(--line);color:#e8e4d9;border-radius:99px;padding:9px 14px;font:600 11px 'DM Sans',sans-serif;cursor:pointer;backdrop-filter:blur(8px)}.sound-toggle[aria-pressed=false]{color:var(--muted)}
-/* 3D tilt on cards */
+
 .video-card,.preset-card,.queue-card,.form-card,.storage-pill,.drop-zone{position:relative;transform-style:preserve-3d;will-change:transform}
 .form-card,.queue-card,.storage-pill{transition:transform .18s ease-out,border-color .2s}
 .tilting::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(circle at var(--gx,50%) var(--gy,0%),#ffffff1f,transparent 55%)}
