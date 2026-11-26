@@ -15,7 +15,14 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const W = +arg('w', 1920), H = Math.round(W * 9 / 16 / 2) * 2;
 const stills = arg('stills', '') ? arg('stills').split(',').map(Number) : null;
 const ffmpeg = process.env.FFMPEG || 'ffmpeg';
-const chrome = process.env.CHROME || (process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : process.platform === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' : 'google-chrome');
+// Chrome, or Edge on Windows (same engine). Set CHROME=<path> to use another install.
+const CANDIDATES = {
+  darwin: ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge'],
+  win32: [process.env.PROGRAMFILES, process.env['PROGRAMFILES(X86)'], process.env.LOCALAPPDATA].filter(Boolean).flatMap(d => [path.join(d, 'Google', 'Chrome', 'Application', 'chrome.exe'), path.join(d, 'Microsoft', 'Edge', 'Application', 'msedge.exe')]),
+  linux: ['/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'],
+};
+const chrome = process.env.CHROME || (CANDIDATES[process.platform] || []).find(p => existsSync(p));
+if (!chrome) { console.error('Chrome or Edge not found. Set CHROME to the browser executable.'); process.exit(1); }
 const raw = ['-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`];
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript' };
 
@@ -36,7 +43,7 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 let browser, page;
 async function open() {
-  browser = await puppeteer.launch({ executablePath: chrome, headless: true, protocolTimeout: 0, args: ['--use-angle=' + (process.platform === 'darwin' ? 'metal' : 'default'), '--enable-gpu', '--ignore-gpu-blocklist', '--disable-gpu-watchdog'] });
+  browser = await puppeteer.launch({ executablePath: chrome, headless: true, protocolTimeout: 0, args: ['--use-angle=' + ({ darwin: 'metal', win32: 'd3d11' }[process.platform] || 'default'), '--enable-gpu', '--ignore-gpu-blocklist', '--disable-gpu-watchdog'] });
   page = await browser.newPage();
   page.on('pageerror', e => console.error('[page error]', e.message));
   await page.goto(base + '/film.html'); await page.waitForFunction('window.film', { timeout: 60000 });

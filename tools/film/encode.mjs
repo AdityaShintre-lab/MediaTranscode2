@@ -18,7 +18,8 @@ let input = ['-i', arg('in', '')], retime = '';
 if (!arg('in')) {
   const list = readdirSync(segs).filter(f => /^seg_\d+\.mkv$/.test(f)).sort();
   if (list.length * +arg('segment', 30) < SECONDS * FPS) { console.error(`only ${list.length} segments in ${segs}; run node render.mjs first`); process.exit(1); }
-  const txt = path.join(segs, 'list.txt'); writeFileSync(txt, list.map(f => `file '${path.join(segs, f).replace(/'/g, "'\\''")}'`).join('\n'));
+  const txt = path.join(segs, 'list.txt'); // forward slashes: FFmpeg reads backslashes in this list as escapes, which breaks Windows paths
+  writeFileSync(txt, list.map(f => `file '${path.join(segs, f).split(path.sep).join('/').replace(/'/g, "'\\''")}'`).join('\n'));
   input = ['-f', 'concat', '-safe', '0', '-i', txt];
 } else {
   const probe = spawnSync(process.env.FFPROBE || 'ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', arg('in')], { encoding: 'utf8' });

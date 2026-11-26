@@ -11,7 +11,7 @@ const SPOT = `float d=dot(vP,vP); if(d>1.)discard; float g=exp(-d*4.2)-.015;`;
 export class Cosmos {
   constructor(canvas, { small = false } = {}) {
     this.canvas = canvas; this.small = small; this.sets = []; this.time = 0; this.idle = false;
-    this.renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+    this.renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance', failIfMajorPerformanceCaveat: true });
     this.renderer.setClearColor(0x000000, 0);
     this.scene = new Scene(); this.camera = new PerspectiveCamera(50, 1, 1, 6000); this.camera.position.z = PERSPECTIVE;
     this.makeGlow(); this.makeDust();

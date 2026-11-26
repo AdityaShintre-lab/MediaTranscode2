@@ -15,7 +15,9 @@ pip install -r requirements.txt
 python backend/app.py
 ```
 
-4. Open http://127.0.0.1:8000
+If PowerShell says running scripts is disabled, run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` first. It only affects that window.
+
+4. Open http://127.0.0.1:8000 in Chrome, Edge or Firefox.
 
 Check that FFmpeg is available:
 
@@ -64,7 +66,7 @@ node render.mjs      # about 40 minutes on a recent GPU; stop and restart any ti
 node encode.mjs
 ```
 
-`node render.mjs --stills 0,6.2,8.4,19 --w 960` renders single moments to check a change first. Needs Google Chrome.
+`node render.mjs --stills 0,6.2,8.4,19 --w 960` renders single moments to check a change first. Needs Google Chrome or Microsoft Edge, which it finds on its own; set `CHROME` to the browser's path if it doesn't. On Windows, run these in PowerShell the same way.
 
 The earlier film-frame flight (`frontend/frames/`, `tools/make_frames.py`) is kept in the repository but the page no longer loads it.
 

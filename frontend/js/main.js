@@ -8,7 +8,18 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const small = Math.min(innerWidth, innerHeight) < 620 || (navigator.deviceMemory && navigator.deviceMemory < 4);
 const saver = navigator.connection?.saveData;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const hasGL = () => { try { const gl = document.createElement('canvas').getContext('webgl2'); gl?.getExtension('WEBGL_lose_context')?.loseContext(); return !!gl; } catch { return false; } };
+// Real GPU only. Software WebGL (no driver, remote desktop, acceleration switched off in the
+// browser) would make every frame crawl, so those machines get the CSS entrance instead.
+const SOFTWARE = /swiftshader|llvmpipe|softpipe|basic render|microsoft basic|software|warp/i;
+const hasGL = () => {
+  try {
+    const gl = document.createElement('canvas').getContext('webgl2', { failIfMajorPerformanceCaveat: true });
+    if (!gl) return false;
+    const info = gl.getExtension('WEBGL_debug_renderer_info'), name = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : '';
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return !SOFTWARE.test(name);
+  } catch { return false; }
+};
 
 const loader = $('site-loader');
 const film = new Film({ video: $('film'), holder: $('stage-film') });
