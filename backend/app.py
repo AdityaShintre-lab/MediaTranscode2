@@ -1,6 +1,7 @@
 import os
 import re
 import uuid
+import mimetypes
 import threading
 import subprocess
 from pathlib import Path
@@ -12,6 +13,14 @@ UPLOADS = ROOT / "uploads"
 CONVERTED = ROOT / "converted"
 UPLOADS.mkdir(exist_ok=True)
 CONVERTED.mkdir(exist_ok=True)
+
+# Windows can map these to the wrong type in its registry, which makes browsers
+# refuse JavaScript modules and fonts. Set them explicitly.
+mimetypes.add_type("text/javascript", ".js")
+mimetypes.add_type("video/mp4", ".mp4")
+mimetypes.add_type("image/webp", ".webp")
+mimetypes.add_type("font/woff2", ".woff2")
+mimetypes.add_type("image/svg+xml", ".svg")
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 500 * 1024 * 1024

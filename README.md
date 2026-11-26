@@ -32,30 +32,57 @@ ffprobe -version
 - Queue status and converted-file download
 - Responsive layout
 
-## Scroll story, sound and 3D
+## The scroll story
 
-- The site opens with an "Enter" screen. Entering plays a short run of soft notes as each part of the page drops in like a pressed key, and every new section does the same as you scroll. There is no piano on screen; the sounds are synthesized in the browser. Use the **Sound** button at the bottom to mute.
-- The hero background is a **180-frame image sequence** (`frontend/frames/frame_0001.webp` to `frame_0180.webp`). Scrolling picks the frame, so the "video" plays forward and backward as you scroll.
-- 3D: mouse parallax on the hero, the hero text tilts back as you scroll, and cards tilt toward your cursor.
+The page opens on a wall of ivory and obsidian slabs that is played like a phrase, then parts onto a single star. From there scrolling drives everything: the star swells, explodes, its debris scatters and settles into a galaxy, and the camera dives into it and arrives at the workspace.
+
+- **Film:** `frontend/media/cosmos-1080.mp4` (phones get `cosmos-720.mp4`). It sits behind the whole page. Scrolling sets its `currentTime`, so it plays forward and backward with you. It is an original render, so there is nothing to license.
+- **Lettering:** every line is assembled from particles that share the page's 3D perspective, on the same clock as the film.
+- **Sound:** off by default. *Enter with sound* or the **Sound** button turns it on; all notes are synthesized in the browser.
+- **Fallbacks:** stills replace the film when video cannot play, when the browser asks to save data, and for visitors who prefer reduced motion. Without WebGL the slabs are drawn in CSS and the particles are skipped. The workspace works in every case.
+- Three.js, GSAP and the Mona Sans font are in `frontend/vendor/` and `frontend/fonts/`, so the page works offline.
+
+### Change the story
+
+Text is in `frontend/index.html` (look for `data-line`). When each line appears is in `frontend/js/story.js` (`LINES`), and which moment of the film plays at which scroll position is in `frontend/js/director.js` (`CUES`).
 
 ### Use your own video
 
-Put your video next to the project and run this (it creates exactly 180 frames):
-
 ```powershell
-ffmpeg -i myvideo.mp4 -vf "fps=180/$(ffprobe -v error -show_entries format=duration -of csv=p=0 myvideo.mp4),scale=1280:-2" -frames:v 180 -c:v libwebp -quality 70 frontend/frames/frame_%04d.webp
+cd tools/film
+node encode.mjs --in myvideo.mp4
 ```
 
-To regenerate the built-in film-frame flight instead: `pip install pillow` then `python tools/make_frames.py`.
+This stretches the video to the 24 seconds the story is cued to, and writes both film sizes and the fallback stills. It needs Node.js and FFmpeg. Re-encoding matters: a normal MP4 has too few keyframes to scrub smoothly.
+
+### Render the film again
+
+```powershell
+cd tools/film
+npm install
+node render.mjs      # about 40 minutes on a recent GPU; stop and restart any time
+node encode.mjs
+```
+
+`node render.mjs --stills 0,6.2,8.4,19 --w 960` renders single moments to check a change first. Needs Google Chrome.
+
+The earlier film-frame flight (`frontend/frames/`, `tools/make_frames.py`) is kept in the repository but the page no longer loads it.
 
 ## Simple project structure
 
 - `backend/app.py` — Flask routes, upload checks and FFmpeg conversion
-- `frontend/index.html` — page structure
-- `frontend/style.css` — design and responsive styling
-- `frontend/script.js` — page navigation, upload and progress updates, key-press sound, frame scrubbing, 3D tilt
-- `frontend/frames/` — the 180 scroll frames
-- `tools/make_frames.py` — renders the 180 frames
+- `frontend/index.html` — page structure and all copy
+- `frontend/style.css` — base styles and the workspace
+- `frontend/cinema.css` — film stage, entrance and story scenes
+- `frontend/script.js` — workspace: navigation, upload, queue and progress
+- `frontend/js/main.js` — starts the cinematic layers and their fallbacks
+- `frontend/js/director.js` — turns scroll into one smoothed timeline
+- `frontend/js/film.js` — buffers and scrubs the video
+- `frontend/js/story.js` — text choreography
+- `frontend/js/cosmos.js` — WebGL dust, glow and particle lettering
+- `frontend/js/overture.js` — the entrance
+- `frontend/js/sound.js` — synthesized sound
+- `tools/film/` — renders and encodes the film
 
 Uploaded and converted files are created automatically in `uploads/` and `converted/`.
 Jobs are kept in memory, so the queue clears when the server restarts. This is a local demo version, not a production deployment.
