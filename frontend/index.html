@@ -4,101 +4,175 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MediaTranscode — Video Workspace</title>
+  <meta name="description" content="Bring your footage in, shape the quality, and download a converted MP4.">
+  <meta name="theme-color" content="#03040b">
+  <link rel="icon" href="/assets/media/icon.svg" type="image/svg+xml">
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="preload" href="/assets/fonts/mona-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/media/still-01.webp" as="image">
   <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/cinema.css">
+  <script src="/assets/vendor/gsap.min.js" defer></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script type="module" src="/assets/script.js"></script>
+  <script type="module" src="/assets/js/main.js"></script>
 </head>
 <body>
 
-  <div class="site-loader" id="site-loader" role="dialog" aria-label="Enter MediaTranscode">
-    <div class="loader-brand"><span class="loader-mark">M</span> MEDIATRANSCODE</div>
-    <div class="loader-bar"><i id="loader-bar"></i></div>
-    <p class="loader-caption" id="loader-caption">Loading scene… 0%</p>
-    <div class="loader-actions">
-      <button class="primary" id="enter-sound" type="button">Enter with sound</button>
-      <button class="ghost" id="enter-quiet" type="button">Enter without sound</button>
+  <!-- The film: fixed behind everything, driven by scroll (js/film.js) -->
+  <div class="stage" id="stage" aria-hidden="true">
+    <div class="stage-film" id="stage-film">
+      <img class="stage-still is-on" src="/assets/media/still-01.webp" alt="">
+      <video id="film" muted playsinline preload="none" disablepictureinpicture disableremoteplayback tabindex="-1"></video>
+    </div>
+    <div class="stage-veil"></div>
+  </div>
+
+  <!-- Live WebGL depth layer: the key entrance, dust and particle lettering (js/cosmos.js) -->
+  <canvas class="cosmos" id="cosmos" aria-hidden="true"></canvas>
+
+  <!-- Entrance. The keys are drawn in WebGL; these spans are the no-WebGL version. -->
+  <div class="overture" id="site-loader" role="dialog" aria-label="Enter MediaTranscode">
+    <div class="overture-keys" id="overture-keys" aria-hidden="true"></div>
+    <div class="overture-actions">
+      <button class="quiet" id="enter-sound" type="button">Enter with sound</button>
+      <button class="quiet" id="enter-quiet" type="button">Enter without sound</button>
     </div>
   </div>
 
-  <section class="immersive-intro" id="immersive-intro">
-    <div class="scene-sticky">
+  <section class="immersive-intro" id="immersive-intro" aria-label="Introduction">
+    <div class="scene-sticky" id="scene-sticky">
       <nav class="hero-nav" aria-label="Main">
-        <a class="brand" href="#" data-key><span class="brand-mark">M</span><span>media<span class="brand-light">transcode</span></span></a>
-        <a class="link" href="#app" data-key data-hero-go="library">Library</a>
-        <a class="link" href="#app" data-key data-hero-go="upload">Upload</a>
-        <a class="link" href="#app" data-key data-hero-go="queue">Queue</a>
+        <a class="brand" href="#top"><span class="brand-mark">M</span><span>media<span class="brand-light">transcode</span></span></a>
+        <a class="link" href="#app" data-hero-go="library">Library</a>
+        <a class="link" href="#app" data-hero-go="upload">Upload</a>
+        <a class="link" href="#app" data-hero-go="queue">Queue</a>
       </nav>
-      <canvas id="rock-scene" aria-label="A cinematic 3D-inspired room with a rocky landscape"></canvas>
-      <div class="scene-vignette"></div>
-      <div class="scene-copy" id="scene-copy">
-        <span class="scene-kicker" data-key>THE MEDIA WORKSPACE</span>
-        <h1 data-key>Every frame.<br><em>In its element.</em></h1>
-        <p data-key>Bring your footage in. Shape the quality. Let every conversion find its flow.</p>
-        <span class="scroll-cue" data-key><i></i> KEEP SCROLLING</span>
+
+      <div class="scene scene-spark" data-scene="spark">
+        <p class="line line-spark" data-line="spark">Every film begins with a spark.</p>
+        <span class="scroll-cue" data-cue><i></i> Keep scrolling</span>
       </div>
-      <article class="scene-chapter chapter-one"><span class="chapter-number">01 / IMPORT</span><h2>Bring every frame in.</h2><p>Drop in your original clip and keep your source file safe.</p></article>
-      <article class="scene-chapter chapter-two"><span class="chapter-number">02 / TRANSFORM</span><h2>Shape the output.</h2><p>Choose 1080p, 720p or 480p and let FFmpeg handle the work.</p></article>
-      <article class="scene-chapter chapter-three"><span class="chapter-number">03 / EXPORT</span><h2>Ready for every screen.</h2><p>Track the job, then download your converted MP4.</p></article>
+
+      <div class="scene scene-element" data-scene="element" id="scene-copy">
+        <span class="scene-kicker" data-soft>The media workspace</span>
+        <h1>
+          <span class="line line-h1a" data-line="element-a">Every frame.</span>
+          <span class="line line-h1b" data-line="element-b">In its element.</span>
+        </h1>
+        <p class="scene-note" data-soft>Bring your footage in. Shape the quality. Let every conversion find its flow.</p>
+      </div>
+
+      <div class="scene scene-hush" data-scene="hush">
+        <p class="line line-hush" data-line="hush">From a single clip…</p>
+      </div>
+
+      <div class="scene scene-unfolds" data-scene="unfolds">
+        <p class="line line-unfolds" data-line="unfolds">…an entire universe unfolds.</p>
+      </div>
+
+      <article class="scene scene-chapter chapter-one" data-scene="import">
+        <span class="chapter-number" data-soft>01 <b>Import</b></span>
+        <h2 class="line" data-line="import">Bring every frame in.</h2>
+        <p data-soft>Drop in your original clip and keep your source file safe.</p>
+      </article>
+
+      <article class="scene scene-chapter chapter-two" data-scene="transform">
+        <span class="chapter-number" data-soft>02 <b>Transform</b></span>
+        <h2 class="line" data-line="transform">Shape the output.</h2>
+        <p data-soft>Choose 1080p, 720p or 480p and let FFmpeg handle the work.</p>
+      </article>
+
+      <article class="scene scene-chapter chapter-three" data-scene="export">
+        <span class="chapter-number" data-soft>03 <b>Export</b></span>
+        <h2 class="line" data-line="export">Ready for every screen.</h2>
+        <p data-soft>Track the job, then download your converted MP4.</p>
+      </article>
+
+      <div class="scene scene-yours" data-scene="yours">
+        <p class="line line-yours" data-line="yours">Now bring yours.</p>
+        <div class="scene-actions" data-soft>
+          <a class="primary" href="#app" data-hero-go="upload">Upload a clip</a>
+          <a class="quiet" href="#app" data-hero-go="library">Open the library</a>
+        </div>
+      </div>
     </div>
   </section>
 
   <div class="app-shell" id="app">
-    <aside class="sidebar">
-      <a class="brand" href="#"><span class="brand-mark">M</span><span>media<span class="brand-light">transcode</span></span></a>
-      <p class="side-label">WORKSPACE</p>
-      <button class="nav-item active" data-page="library"><span>▦</span> Video Library</button>
-      <button class="nav-item" data-page="upload"><span>＋</span> Upload Clip</button>
-      <button class="nav-item" data-page="queue"><span>◷</span> Queue Tracker <span class="nav-count" id="queue-count">0</span></button>
-      <p class="side-label second-label">PREFERENCES</p>
-      <button class="nav-item" data-page="presets"><span>◈</span> Preset Profiles</button>
-      <button class="nav-item" data-page="settings"><span>⚙</span> Settings</button>
-      <div class="sidebar-bottom"><div class="avatar">MT</div><div><b>My Workspace</b><small>Personal plan</small></div><span class="dots">•••</span></div>
-    </aside>
+    <div class="app-frame" id="app-frame">
+      <aside class="sidebar">
+        <a class="brand" href="#top"><span class="brand-mark">M</span><span>media<span class="brand-light">transcode</span></span></a>
+        <p class="side-label">Workspace</p>
+        <button class="nav-item active" data-page="library"><svg class="ico" aria-hidden="true"><use href="#i-library"/></svg> Video Library</button>
+        <button class="nav-item" data-page="upload"><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg> Upload Clip</button>
+        <button class="nav-item" data-page="queue"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg> Queue Tracker <span class="nav-count" id="queue-count">0</span></button>
+        <p class="side-label second-label">Preferences</p>
+        <button class="nav-item" data-page="presets"><svg class="ico" aria-hidden="true"><use href="#i-preset"/></svg> Preset Profiles</button>
+        <button class="nav-item" data-page="settings"><svg class="ico" aria-hidden="true"><use href="#i-settings"/></svg> Settings</button>
+        <div class="sidebar-bottom"><div class="avatar">MT</div><div><b>My Workspace</b><small>Personal plan</small></div><span class="dots" aria-hidden="true">•••</span></div>
+      </aside>
 
-    <main class="main">
-      <header class="topbar">
-        <div><span class="eyebrow">YOUR CREATIVE WORKSPACE</span><h1 id="page-title">Video Library</h1></div>
-        <div class="top-actions"><span class="online-dot"></span><span class="online-text">System ready</span><button class="primary small" data-go="upload">＋ New upload</button></div>
-      </header>
+      <main class="main">
+        <header class="topbar">
+          <div><span class="eyebrow">Your creative workspace</span><h2 class="page-title" id="page-title">Video Library</h2></div>
+          <div class="top-actions"><span class="online-dot"></span><span class="online-text">System ready</span><button class="primary small" data-go="upload"><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg> New upload</button></div>
+        </header>
 
-      <section class="page active-page" id="library-page">
-        <div class="welcome-row"><div><h2>Your media, in one place.</h2><p>Manage your clips and keep every conversion moving.</p></div><div class="storage-pill">500 MB <span>MAX FILE SIZE</span></div></div>
-        <div class="toolbar"><input id="search" type="search" placeholder="⌕  Search your videos..."><select id="status-filter"><option value="All">All statuses</option><option>Queued</option><option>Processing</option><option>Done</option><option>Failed</option></select></div>
-        <div class="section-heading"><div><h3>Recent clips</h3><p>Your uploaded and converted videos</p></div><span class="muted" id="clip-total">0 CLIPS</span></div>
-        <div class="video-grid" id="video-grid"><div class="empty-state"><div class="empty-icon">▧</div><h3>Your library is waiting</h3><p>Upload a video to start your first conversion.</p><button class="primary" data-go="upload">Upload a clip <span>→</span></button></div></div>
-      </section>
+        <section class="page active-page" id="library-page">
+          <div class="welcome-row"><div><h2>Your media, in one place.</h2><p>Manage your clips and keep every conversion moving.</p></div><div class="storage-pill">500 MB <span>max file size</span></div></div>
+          <div class="toolbar"><label class="search"><svg class="ico" aria-hidden="true"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Search your videos" aria-label="Search your videos"></label><select id="status-filter" aria-label="Filter by status"><option value="All">All statuses</option><option>Queued</option><option>Processing</option><option>Done</option><option>Failed</option></select></div>
+          <div class="section-heading"><div><h3>Recent clips</h3><p>Your uploaded and converted videos</p></div><span class="muted" id="clip-total">0 clips</span></div>
+          <div class="video-grid" id="video-grid"><div class="empty-state"><svg class="empty-icon" aria-hidden="true"><use href="#i-library"/></svg><h3>Your library is waiting</h3><p>Upload a video to start your first conversion.</p><button class="primary" data-go="upload">Upload a clip</button></div></div>
+        </section>
 
-      <section class="page" id="upload-page">
-        <div class="page-intro"><span class="eyebrow">ADD TO YOUR WORKSPACE</span><h2>Upload a new clip</h2><p>Choose a video and select the output quality you need.</p></div>
-        <form id="upload-form">
-          <label class="drop-zone" id="drop-zone">
-            <input type="file" id="video-file" accept=".mp4,.mov,.mkv,video/mp4,video/quicktime,video/x-matroska" hidden>
-            <span class="upload-symbol">↑</span><strong>Drop your video here</strong><span class="muted">or <u>browse files</u> from your computer</span><small>MP4, MOV or MKV · Up to 500 MB</small>
-            <span class="file-picked" id="file-picked"></span>
-          </label>
-          <div class="form-card"><label for="preset">OUTPUT PRESET</label><select id="preset"><option value="1080p">1080p · Full HD</option><option value="720p" selected>720p · HD</option><option value="480p">480p · Standard</option></select><div class="form-note">Your video will be converted to MP4 format.</div></div>
-          <div class="form-footer"><span class="muted">Your original file stays unchanged.</span><button class="primary" id="upload-button" type="submit">Start conversion <span>→</span></button></div>
-          <p class="form-message" id="form-message"></p>
-        </form>
-      </section>
+        <section class="page" id="upload-page">
+          <div class="page-intro"><span class="eyebrow">Add to your workspace</span><h2>Upload a new clip</h2><p>Choose a video and select the output quality you need.</p></div>
+          <form id="upload-form">
+            <label class="drop-zone" id="drop-zone">
+              <input class="visually-hidden" type="file" id="video-file" accept=".mp4,.mov,.mkv,video/mp4,video/quicktime,video/x-matroska">
+              <span class="upload-symbol"><svg class="ico" aria-hidden="true"><use href="#i-up"/></svg></span><strong>Drop your video here</strong><span class="muted">or <u>browse files</u> from your computer</span><small>MP4, MOV or MKV, up to 500 MB</small>
+              <span class="file-picked" id="file-picked"></span>
+            </label>
+            <div class="form-card"><label for="preset">Output preset</label><select id="preset"><option value="1080p">1080p · Full HD</option><option value="720p" selected>720p · HD</option><option value="480p">480p · Standard</option></select><div class="form-note">Your video will be converted to MP4 format.</div></div>
+            <div class="form-footer"><span class="muted">Your original file stays unchanged.</span><button class="primary" id="upload-button" type="submit">Start conversion</button></div>
+            <p class="form-message" id="form-message" role="status"></p>
+          </form>
+        </section>
 
-      <section class="page" id="queue-page">
-        <div class="page-intro"><span class="eyebrow">CONVERSION ACTIVITY</span><h2>Queue tracker</h2><p>Follow the progress of your video conversions.</p></div>
-        <div id="queue-list" class="queue-list"><div class="empty-state compact"><div class="empty-icon">◷</div><h3>No active conversions</h3><p>When you upload a clip, its progress will appear here.</p><button class="primary" data-go="upload">Upload a clip</button></div></div>
-      </section>
+        <section class="page" id="queue-page">
+          <div class="page-intro"><span class="eyebrow">Conversion activity</span><h2>Queue tracker</h2><p>Follow the progress of your video conversions.</p></div>
+          <div id="queue-list" class="queue-list"><div class="empty-state compact"><svg class="empty-icon" aria-hidden="true"><use href="#i-clock"/></svg><h3>No active conversions</h3><p>When you upload a clip, its progress will appear here.</p><button class="primary" data-go="upload">Upload a clip</button></div></div>
+        </section>
 
-      <section class="page" id="presets-page">
-        <div class="page-intro"><span class="eyebrow">OUTPUT SETTINGS</span><h2>Preset profiles</h2><p>Choose the balance of quality and file size that works for you.</p></div>
-        <div class="preset-grid"><article class="preset-card"><span class="preset-icon">✦</span><h3>1080p</h3><p>Full HD · Best detail</p><span class="tag">HIGH QUALITY</span></article><article class="preset-card featured"><span class="preset-icon">◈</span><h3>720p</h3><p>HD · Balanced output</p><span class="tag">RECOMMENDED</span></article><article class="preset-card"><span class="preset-icon">◌</span><h3>480p</h3><p>Standard · Smaller file</p><span class="tag">SMALLER SIZE</span></article></div>
-      </section>
+        <section class="page" id="presets-page">
+          <div class="page-intro"><span class="eyebrow">Output settings</span><h2>Preset profiles</h2><p>Choose the balance of quality and file size that works for you.</p></div>
+          <div class="preset-grid"><article class="preset-card"><span class="preset-orb orb-full" aria-hidden="true"></span><h3>1080p</h3><p>Full HD · Best detail</p><span class="tag">High quality</span></article><article class="preset-card featured"><span class="preset-orb orb-mid" aria-hidden="true"></span><h3>720p</h3><p>HD · Balanced output</p><span class="tag">Recommended</span></article><article class="preset-card"><span class="preset-orb orb-small" aria-hidden="true"></span><h3>480p</h3><p>Standard · Smaller file</p><span class="tag">Smaller size</span></article></div>
+        </section>
 
-      <section class="page" id="settings-page">
-        <div class="page-intro"><span class="eyebrow">WORKSPACE</span><h2>Settings</h2><p>A few details about your local MediaTranscode setup.</p></div>
-        <div class="form-card settings-card"><div><b>Workspace name</b><p class="muted">My Workspace</p></div><div><b>Maximum upload size</b><p class="muted">500 MB per video</p></div><div><b>Supported formats</b><p class="muted">MP4, MOV, MKV → MP4</p></div><div><b>Conversion engine</b><p class="muted">FFmpeg running locally on your computer</p></div></div>
-      </section>
-      <footer>MEDIATRANSCODE <span>·</span> MADE FOR YOUR MEDIA WORKFLOW</footer>
-    </main>
+        <section class="page" id="settings-page">
+          <div class="page-intro"><span class="eyebrow">Workspace</span><h2>Settings</h2><p>A few details about your local MediaTranscode setup.</p></div>
+          <div class="form-card settings-card"><div><b>Workspace name</b><p class="muted">My Workspace</p></div><div><b>Maximum upload size</b><p class="muted">500 MB per video</p></div><div><b>Supported formats</b><p class="muted">MP4, MOV, MKV → MP4</p></div><div><b>Conversion engine</b><p class="muted">FFmpeg running locally on your computer</p></div></div>
+        </section>
+        <footer>MediaTranscode <span>·</span> Made for your media workflow</footer>
+      </main>
+    </div>
   </div>
-  <div class="toast" id="toast"></div>
-  <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true">♪ Sound on</button>
-  <script src="/assets/script.js"></script>
+
+  <div class="toast" id="toast" role="status"></div>
+  <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false">Sound off</button>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-library" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M3.5 9.5h17M8 5v4.5M13 5v4.5M18 5v4.5M10.5 12.6v3.8l3.4-1.9z"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.3"/><path d="M12 7.4V12l3.2 2"/></symbol>
+      <symbol id="i-preset" viewBox="0 0 24 24"><path d="M12 3.6 20.4 12 12 20.4 3.6 12z"/><path d="M12 8.4 15.6 12 12 15.6 8.4 12z"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7.5h9M17 7.5h3M4 16.5h3M11 16.5h9"/><circle cx="15" cy="7.5" r="2"/><circle cx="9" cy="16.5" r="2"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 5 5"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5.5M6 11.2l6-6 6 6"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8.5 5.8v12.4L18.6 12z"/></symbol>
+    </defs>
+  </svg>
 </body>
 </html>

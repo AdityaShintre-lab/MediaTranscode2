@@ -1,0 +1,8 @@
+{
+  "name": "mediatranscode-film",
+  "private": true,
+  "type": "module",
+  "description": "Renders the scroll film used by the MediaTranscode site.",
+  "scripts": { "render": "node render.mjs", "encode": "node encode.mjs" },
+  "dependencies": { "puppeteer-core": "^25.0.0" }
+}
